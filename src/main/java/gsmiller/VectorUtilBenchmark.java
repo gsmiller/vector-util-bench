@@ -18,7 +18,7 @@ public class VectorUtilBenchmark {
 
   @Setup(Level.Trial)
   public void setup() {
-//    verifyCorrect();
+    // todo: maybe do a validation?
   }
 
   private static final VectorSpecies<Float> FLOAT_VECTOR_SP = FloatVector.SPECIES_PREFERRED;
@@ -45,7 +45,6 @@ public class VectorUtilBenchmark {
       r += vecA[i] * vecB[i];
     }
 
-    state.result = r;
     bh.consume(r);
   }
 
@@ -58,24 +57,7 @@ public class VectorUtilBenchmark {
     for (int i = 0; i < vecA.length; i++) {
       r += vecA[i] * vecB[i];
     }
-
-    state.result = r;
+    
     bh.consume(r);
-  }
-
-  public void verifyCorrect() {
-    var bh = new Blackhole("Today's password is swordfish. I understand instantiating Blackholes directly is dangerous.");
-
-    for (int size : new int[] { 128, 130, 1024}) {
-      var state = new State();
-      state.size = size;
-      state.setup();
-      dotProductScalar(state, bh);
-      float expectedResult = state.result;
-      dotProductVectorized(state, bh);
-      if (expectedResult != state.result && Math.abs(expectedResult - state.result) > 0.00001) {
-        throw new AssertionError("Incorrect result. Expected: " + expectedResult + ", got: " + state.result + " " + Math.abs(expectedResult - state.result));
-      }
-    }
   }
 }
